@@ -1,17 +1,17 @@
 function getToken() {
-  return localStorage.getItem('token');
+  return localStorage.getItem("token");
 }
 
 async function getUserByToken(token) {
   try {
-    const res = await axios.get('https://api.marktube.tv/v1/me', {
+    const res = await axios.get("https://api.marktube.tv/v1/me", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return res.data;
   } catch (error) {
-    console.log('getUserByToken error', error);
+    console.log("getUserByToken error", error);
     return null;
   }
 }
@@ -19,33 +19,33 @@ async function getUserByToken(token) {
 async function logout() {
   const token = getToken();
   if (token === null) {
-    location.assign('/login');
+    location.assign("/login");
     return;
   }
   try {
-    await axios.delete('https://api.marktube.tv/v1/me', {
+    await axios.delete("https://api.marktube.tv/v1/me", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
   } catch (error) {
-    console.log('logout error', error);
+    console.log("logout error", error);
   } finally {
     localStorage.clear();
-    location.assign('/login');
+    location.assign("/login");
   }
 }
 
 async function getBooks(token) {
   try {
-    const res = await axios.get('https://api.marktube.tv/v1/book', {
+    const res = await axios.get("https://api.marktube.tv/v1/book", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return res.data;
   } catch (error) {
-    console.log('getBooks error', error);
+    console.log("getBooks error", error);
     return null;
   }
 }
@@ -53,7 +53,7 @@ async function getBooks(token) {
 async function deleteBook(bookId) {
   const token = getToken();
   if (token === null) {
-    location.assign('/login');
+    location.assign("/login");
     return;
   }
   await axios.delete(`https://api.marktube.tv/v1/book/${bookId}`, {
@@ -65,20 +65,20 @@ async function deleteBook(bookId) {
 }
 
 function bindLogoutButton() {
-  const btnLogout = document.querySelector('#btn_logout');
-  btnLogout.addEventListener('click', logout);
+  const btnLogout = document.querySelector("#btn_logout");
+  btnLogout.addEventListener("click", logout);
 }
 
 function render(books) {
-  const listElement = document.querySelector('#list');
+  const listElement = document.querySelector("#list");
   for (let i = 0; i < books.length; i++) {
     const book = books[i];
-    const bookElement = document.createElement('div');
-    bookElement.classList.value = 'col-md-4';
+    const bookElement = document.createElement("div");
+    bookElement.classList.value = "col-md-4";
     bookElement.innerHTML = `
     <div class="card mb-4 shadow-sm">
       <div class="card-body">
-        <p class="card-text">${book.title === '' ? '제목 없음' : book.title}</p>
+        <p class="card-text">${book.title === "" ? "제목 없음" : book.title}</p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="btn-group">
             <a href="/book?id=${book.bookId}">
@@ -98,7 +98,7 @@ function render(books) {
             </button>
           </div>
           <small class="text-muted">${new Date(
-            book.createdAt,
+            book.createdAt
           ).toLocaleString()}</small>
         </div>
       </div>
@@ -106,8 +106,8 @@ function render(books) {
     `;
     listElement.append(bookElement);
   }
-  document.querySelectorAll('.btn-delete').forEach(element => {
-    element.addEventListener('click', async event => {
+  document.querySelectorAll(".btn-delete").forEach((element) => {
+    element.addEventListener("click", async (event) => {
       const bookId = event.target.dataset.bookId;
       try {
         await deleteBook(bookId);
@@ -126,7 +126,7 @@ async function main() {
   // 토큰 체크
   const token = getToken();
   if (token === null) {
-    location.assign('/login');
+    location.assign("/login");
     return;
   }
 
@@ -134,7 +134,7 @@ async function main() {
   const user = await getUserByToken(token);
   if (user === null) {
     localStorage.clear();
-    location.assign('/login');
+    location.assign("/login");
     return;
   }
 
@@ -148,4 +148,4 @@ async function main() {
   render(books);
 }
 
-document.addEventListener('DOMContentLoaded', main);
+document.addEventListener("DOMContentLoaded", main);
